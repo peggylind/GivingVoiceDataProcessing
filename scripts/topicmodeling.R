@@ -1,14 +1,13 @@
 library(topicmodels)
 library(SnowballC)
 
-runTopicmodel <- function(numberOfTopics, burnin = 4000, iter = 2000,
-  thin = 500, nstart = 5, best = TRUE) {
+ceaningForTopicmodel <- function() {
   
   #load data and create corpus for all articles
   allCorpus <- loadCorpusData(here(dataDirectory))
   
   #Cleaning - preprocessing
-
+  
   #create the toSpace content transformer 
   toSpace <- content_transformer(function(x, pattern) { return (gsub(pattern, " ", x))})
   #to remove potentially problematic symbols
@@ -50,16 +49,22 @@ runTopicmodel <- function(numberOfTopics, burnin = 4000, iter = 2000,
   
   #Strip whitespace?
   allCorpus <- tm_map(allCorpus, stripWhitespace)
-
+  
   #Stem document
   allCorpus <- tm_map(allCorpus,stemDocument)
   
   #some clean up
   allCorpus <- tm_map(allCorpus, content_transformer(gsub),
-                           pattern = "wouldn'", replacement = "wouldnot")
+                      pattern = "wouldn'", replacement = "wouldnot")
+  
+  return(allCorpus)
+}
+
+runTopicmodel <- function(corpus, numberOfTopics, burnin = 4000, iter = 2000,
+  thin = 500, nstart = 5, best = TRUE) {
   
   #Create document-term matrix
-  dtm <- DocumentTermMatrix(allCorpus)
+  dtm <- DocumentTermMatrix(corpus)
   
   #Run LDA using Gibbs sampling
   ldaOut <-LDA(dtm,numberOfTopics, method="Gibbs", control=list(nstart=nstart, seed = seed, best=best, burnin = burnin, iter = iter, thin=thin))
