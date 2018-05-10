@@ -24,19 +24,26 @@ months <- 1:12
 ####### PART 1: creation of STATA input file
 #create STATA input file
 source(here("scripts", "basicStats.R"))
-#result <- createStataInput(countries, years, month)
+result <- createStataInput(countries, years, month)
 
 #write outputfile
 outputFile <- "Output/Data_clean_forStata.csv"
-#write_csv(result, path=paste0(here(), "/", outputFile))
+write_csv(result, path=paste0(here(), "/", outputFile))
 
 ####### PART 2: creation of topicmodels
 source(here("scripts", "topicmodeling.R"))
+corpus <- ceaningForTopicmodel()
 numberOfTopics = 5
+<<<<<<< HEAD
 #ldaOut <- runTopicmodel(numberOfTopics)
 corpusfordebugging <- runTopicmodel(numberOfTopics)
 writeLines(as.character(corpusfordebugging[[2]]))
 # #write out results
+=======
+ldaOut <- runTopicModel(corpus, numberOfTopics)
+
+#write out results
+>>>>>>> 9e72cb877566d023f18d02a78760b2a49a4b37ff
 outputFolder <- "/Output/"
 # #docs to topics
 # ldaOut.topics <- as.matrix(topics(ldaOut))
