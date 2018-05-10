@@ -58,12 +58,15 @@ runTopicmodel <- function(numberOfTopics, burnin = 4000, iter = 2000,
   allCorpus <- tm_map(allCorpus, content_transformer(gsub),
                            pattern = "wouldn'", replacement = "wouldnot")
   
+  #SAUBER AB HIER
   #Create document-term matrix
   dtm <- DocumentTermMatrix(allCorpus)
   
   #Run LDA using Gibbs sampling
-  ldaOut <-LDA(dtm,numberOfTopics, method="Gibbs", control=list(nstart=nstart, seed = seed, best=best, burnin = burnin, iter = iter, thin=thin))
+  #seed <-list(2003,5,63,100001,765)
+  #ldaOut <-LDA(dtm,numberOfTopics, method="Gibbs", control=list(nstart=nstart, seed = seed, best=best, burnin = burnin, iter = iter, thin=thin))
   
-  return(ldaOut)
+  return(allCorpus)
+  #return(ldaOut)
 }
 

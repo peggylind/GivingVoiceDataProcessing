@@ -10,7 +10,7 @@ options(stringsAsFactors = FALSE)
 
 # Prepare data and secondary data
 source(here("scripts","loadData.R")) 
-dataDirectory <- "Data_clean"
+dataDirectory <- "TestData"
 secondaryDataDirectory <- "Secondary"
 #load the terror organization data
 terror_org <- loadTerrorOrganizationData(here(secondaryDataDirectory))
@@ -33,21 +33,22 @@ outputFile <- "Output/Data_clean_forStata.csv"
 ####### PART 2: creation of topicmodels
 source(here("scripts", "topicmodeling.R"))
 numberOfTopics = 5
-ldaOut <- runTopicModel(numberOfTopics)
-
-#write out results
+#ldaOut <- runTopicmodel(numberOfTopics)
+corpusfordebugging <- runTopicmodel(numberOfTopics)
+writeLines(as.character(corpusfordebugging[[2]]))
+# #write out results
 outputFolder <- "/Output/"
-#docs to topics
-ldaOut.topics <- as.matrix(topics(ldaOut))
-write.csv(ldaOut.topics,file=paste0(here(), outputFolder, "LDAGibbs",numerOfTopics,"DocsToTopics.csv"))
-
-#top 6 terms in each topic
-ldaOut.terms <- as.matrix(terms(ldaOut,6))
-write.csv(ldaOut.terms,file=paste0(here(), outputFolder, "LDAGibbs",numberOfTopics,"TopicsToTerms.csv"))
-
-#probabilities associated with each topic assignment
-topicProbabilities <- as.data.frame(ldaOut@gamma)
-write.csv(topicProbabilities,file=paste0(here(), outputFolder, "LDAGibbs",numberOfTopics,"TopicProbabilities.csv"))
+# #docs to topics
+# ldaOut.topics <- as.matrix(topics(ldaOut))
+# write.csv(ldaOut.topics,file=paste0(here(), outputFolder, "LDAGibbs",numberOfTopics,"DocsToTopics.csv"))
+# # 
+# # #top 6 terms in each topic
+# ldaOut.terms <- as.matrix(terms(ldaOut,6))
+# write.csv(ldaOut.terms,file=paste0(here(), outputFolder, "LDAGibbs",numberOfTopics,"TopicsToTerms.csv"))
+# # 
+# # #probabilities associated with each topic assignment
+# topicProbabilities <- as.data.frame(ldaOut@gamma)
+# write.csv(topicProbabilities,file=paste0(here(), outputFolder, "LDAGibbs",numberOfTopics,"TopicProbabilities.csv"))
 
 
 
