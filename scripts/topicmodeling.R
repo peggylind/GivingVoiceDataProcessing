@@ -1,7 +1,7 @@
 library(topicmodels)
 library(SnowballC)
 
-ceaningForTopicmodel <- function() {
+cleaningForTopicmodel <- function() {
   
   #load data and create corpus for all articles
   allCorpus <- loadCorpusData(here(dataDirectory))
