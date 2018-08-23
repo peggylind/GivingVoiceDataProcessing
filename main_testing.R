@@ -34,7 +34,8 @@ outputFile <- "Output/Data_clean_forStata.csv"
 source(here("scripts", "topicmodeling.R"))
 numberOfTopics = 5
 #ldaOut <- runTopicModel(numberOfTopics)
-corpustesting <- ceaningForTopicmodel()
+corpusfordebugging <- cleaningForTopicmodel()
+writeLines(as.character(corpusfordebugging[[2]]))
 
 #write out results
 outputFolder <- "/Output/"
