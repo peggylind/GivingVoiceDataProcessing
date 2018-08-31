@@ -2,6 +2,7 @@ library(here)
 library(readr)
 library(jsonlite)
 library(dplyr)
+library(tibble)
 library(stringr)
 library(zoo)
 library(tm)
@@ -16,7 +17,7 @@ secondaryDataDirectory <- "Secondary"
 terror_org <- loadTerrorOrganizationData(here(secondaryDataDirectory))
 
 #define list of countries
-countries <- c("UK", "US")
+countries <- c("UK")
 #define years and month
 years <- c(2014, 2015, 2016)
 months <- 1:12
@@ -27,7 +28,7 @@ source(here("scripts", "basicStats.R"))
 result <- createStataInput(countries, years, month)
 
 #write outputfile
-outputFile <- "Output/Data_clean_forStata.csv"
+outputFile <- "Output/Data_clean_forStata_UK.csv"
 write_csv(result, path=paste0(here(), "/", outputFile))
 
 ####### PART 2: creation of topicmodels

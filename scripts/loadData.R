@@ -19,7 +19,7 @@ loadTerrorOrganizationData <- function(baseDirectory){
   result <- fromJSON(txt = paste0(baseDirectory, "/terror_organizations.json"))
   result_tbl <- as_data_frame(result)
   # count dictionaries content
-  result_tbl$count_dict <- lapply(result_tbl$dict, function(x) length(unlist(str_split(x, "\\|"))))
+  result_tbl$count_dict <- sapply(result_tbl$dict, function(x) length(unlist(str_split(x, "\\|"))))
   return(result_tbl)
 }
 

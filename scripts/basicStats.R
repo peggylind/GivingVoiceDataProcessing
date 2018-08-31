@@ -8,7 +8,7 @@ createStataInput <- function(countries, years, month) {
       #load data
       #find files for particular month, year
       filePattern <- paste0(year, "_", month, "[[:blank:]][[:digit:]]{1,4}")
-      filenames <- list.files(here(dataDirectory),pattern=filePattern, full.names = T)
+      filenames <- list.files(dataDirectory,pattern=filePattern, full.names = T)
       #read files into a character vector
       files <- lapply(filenames, readLines)
       #create small corpus
@@ -24,13 +24,17 @@ createStataInput <- function(countries, years, month) {
         docs<- tm_map(docs, content_transformer(tolower))
         
         #create by terror organization
-        for (dict in terror_org$dict) {
+        for (i in 1:nrow(terror_org)) {
+          terror_organization <- terror_org[i,]
           #occurances for each dictionary
-          occ <- length(grep(dict, docs$content))
+          occ <- length(grep(terror_organization$dict, docs$content))
           #counts for each dictionary
-          count <- sum(str_count(docs$content, dict))
-          #add rows to output
-          output <- rbind(output, data.frame(country, dict, year, month, occ, count))
+          count <- sum(str_count(docs$content, terror_organization$dict))
+          # merge with terror organizations to keep all info together
+          # add rows to output
+          output <- rbind(output, data.frame(country, terror_organization$ID, 
+            terror_organization$name, terror_organization$name_gtd, terror_organization$dict, terror_organization$count_dict, 
+                 year, month, terror_organization$size, occ, count))
         }
       }
     }
@@ -39,19 +43,16 @@ createStataInput <- function(countries, years, month) {
   # sort by country and dictionary and calculate 3-month lag occurances and counts
   output_sorted <- output %>%
     #sort
-    arrange(dict, country) %>%
+    arrange(terror_organization.ID, country) %>%
     #add ID column 
-    mutate(ID = rownames(output_sorted))
+    rownames_to_column(var = "rowid") %>%
     #group by 
-    group_by(country, dict) %>% 
+    group_by(country, terror_organization.dict) %>% 
     #calculate 3-month lag occurances and counts
     mutate(occ_lag3 = rollsumr(occ, k = 3, fill = NA), 
            count_lag3 = rollsumr(count, k = 3, fill = NA)) %>%
     #shift calculated lages down
     mutate(occ_lag3=lag(occ_lag3), count_lag3=lag(count_lag3)) 
-  
-  # merge with terror organizations to keep all info together
-  
   
   return(output_sorted)
 }
