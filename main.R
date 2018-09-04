@@ -22,10 +22,25 @@ countries <- c("UK")
 years <- c(2014, 2015, 2016)
 months <- 1:12
 
-####### PART 1: creation of STATA input file
+####### PART 1: creation of GTD (Global Terrorist Database) counts
+# checks if counts already have been created (this potentially avoids reading the GTD file
+# but make sure you have generated the counts for the years)
+if (file.exists(paste0(secondaryDataDirectory, "/gtd_counts.csv"))) {
+  gtd_counts <- loadGTDcounts(here(secondaryDataDirectory))
+} else {
+  gtd_data <- loadGTD(here(secondaryDataDirectory))
+  gtd_counts <- createGDTcounts(gtd_data, years, write = TRUE)
+}
+
+
+####### PART 2: creation of STATA input file
 #create STATA input file
 source(here("scripts", "basicStats.R"))
 result <- createStataInput(countries, years, month)
+#merge with GTD counts
+result <- left_join(result, gtd_counts, 
+                   by = c("terror_organization.name_gtd" = "gname", "month" = "imonth", "year" = "iyear"))
+
 
 #write outputfile
 outputFile <- "Output/Data_clean_forStata_UK.csv"

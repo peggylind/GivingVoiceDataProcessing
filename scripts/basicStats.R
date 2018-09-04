@@ -56,4 +56,26 @@ createStataInput <- function(countries, years, month) {
   
   return(output_sorted)
 }
+
+createGDTcounts <- function(gtd_data, years, write = TRUE) {
+  gtd_sorted <- gtd_data %>% 
+    #filter for the terror organizations and years
+    filter(gname %in% terror_org$name_gtd & iyear %in% years) %>% 
+    select(gname, iyear, imonth, region, nkill, nkillus) %>%
+    # group by year, month and terror organization
+    group_by(iyear, imonth, gname) %>% 
+    # create counts
+    summarise(sum_nkill = sum(nkill, na.rm = TRUE),
+              count_attacks = n(),
+              sum_reg = sum(nkill[region==1 | region==8], na.rm = TRUE),
+              count_attacks_reg = length(gname[region==1 | region==8])) %>%
+    # sort according to terror organization
+    arrange(factor(gname, levels = terror_org$name_gtd))
+    
+  # write file 
+  if (write) {
+    write_csv(gtd_sorted, path=paste0(secondaryDataDirectory, "/gtd_counts.csv"))
+  }        
+  return(gtd_sorted)
+}
   

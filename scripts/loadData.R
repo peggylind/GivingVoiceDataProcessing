@@ -31,3 +31,19 @@ loadPattern <- function(baseDirectory, pattern){
   strmatchingPattern <- pull(result_tbl, pattern)
   return(strmatchingPattern)
 }
+
+##read GTD data
+###################################################################################
+loadGTD <- function(baseDirectory){
+  # loading original GTD file
+  gtd_data <- read_delim(paste0(baseDirectory, "/gtd_13to16_0617dist.txt"), 
+                         "\t", escape_double = FALSE, trim_ws = TRUE)
+  return(gtd_data)
+}
+
+loadGTDcounts <- function(baseDirectory) {
+  # reading data from counts file
+  gtd_data <- read_csv(paste0(baseDirectory, "/gtd_counts.csv"))
+  return(gtd_data)
+}
+
