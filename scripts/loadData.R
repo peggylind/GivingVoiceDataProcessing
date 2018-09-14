@@ -13,7 +13,7 @@ loadCorpusData <- function(dataDirectory){
   return(docs_ges)
 }
 
-##read terror organization data
+##read terror organization data, this function also counts the the content of the dictionaries
 ###################################################################################
 loadTerrorOrganizationData <- function(baseDirectory){
   result <- fromJSON(txt = paste0(baseDirectory, "/terror_organizations.json"))
